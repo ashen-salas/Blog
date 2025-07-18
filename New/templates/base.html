@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Blog{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+<body data-authenticated="{{ 'true' if current_user.is_authenticated else 'false' }}">
+    <div class="bg-topbar">
+        <p>Blog | Dashboards </p>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('logout') }}" class="bg-topbar-link">Cerrar sesión</a>
+        {% else %}
+        <a href="{{ url_for('login') }}" class="bg-topbar-link">Login Admin</a>
+        {% endif %}
+    </div>
+    <header class="bg-header">
+        <nav class="bg-nav" id="main-nav">
+            <img src="{{ url_for('static', filename='objects/logo.png') }}" alt="Logo" class="bg-logo" />
+            <a href="{{ url_for('index') }}">Inicio</a>
+
+            <a href="#" 
+            id="dashboard-link"
+            data-dashboard-url="{{ url_for('admin_dashboard') }}">Dashboard</a>
+
+            <a href="https://ashen-salas.github.io/My-Websites/" target="_blank">Proyects</a>
+            <a href="https://github.com/ashen-salas" target="_blank">Social</a>
+        </nav>
+    </header>
+
+    <main class="bg-main">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
